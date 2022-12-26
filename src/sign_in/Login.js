@@ -1,11 +1,10 @@
-import { Fragment, useState } from 'react'
+import { Fragment } from 'react'
 import logo from '../assets/images/logo.png'
 import { Link, useNavigate } from 'react-router-dom'
 import loginLogo from '../assets/images/main_login_pic.png'
 import googleLogo from '../assets/images/google_icon.png'
 import Footer from '../general/Footer'
 import Validator from '../general/Validator'
-import HomePage from '../home_page/HomePage'
 import fontawesome from '../assets/font/fontawesome-free-6.2.0-web/css/all.min.css'
 export default function Login(props) {
     const userApi = 'http://localhost:8080/api/authenticate';
@@ -100,7 +99,6 @@ export default function Login(props) {
                                     <input id="password" name="password" rules="required|min:6" type="password" placeholder="Enter password" className="auth-form__input" />
                                     <span className="form-message"></span>
                                 </div>
-                                {/* <input type="submit" value="Submit" /> */}
                                 <button type='submit' className="btn btn__auth">Sign In</button>
                             </form>
 
