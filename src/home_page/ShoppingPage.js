@@ -26,36 +26,41 @@ const ShoppingPage = () => {
         });
     }
     function addToCart(arg) {
-        fetch('http://localhost:8080/api/admin/carts', {
-            method: 'POST',
-            headers: {
-                'Authorization': 'Bearer ' + token,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                status: "InCart",
-                receiver: null,
-                delivery: null,
-                products: [
-                    {
-                        'id': arg,
-                        'quantity': 1
+        if (state.username) {
+            fetch('http://localhost:8080/api/admin/carts', {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    status: "InCart",
+                    receiver: null,
+                    delivery: null,
+                    products: [
+                        {
+                            'id': arg,
+                            'quantity': 1
+                        }
+                    ]
+                })
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return;
                     }
-                ]
-            })
-        })
-            .then(response => {
-                if (response.ok) {
-                    return;
-                }
-                throw new Error('Failed to add item to cart');
-            })
-            .catch(error => {
-            });
+                    throw new Error('Failed to add item to cart');
+                })
+                .catch(error => {
+                });
+        }
+        else {
+            navigate('/login');
+        }
     }
     const [productFlowers, setProductFlowers] = useState([])
     const fetchData = () => {
-        fetch("http://localhost:8080/api/admin/products?type=Flower", {
+        fetch("http://localhost:8080/api/products?type=Flower", {
             headers: {
                 'Authorization': 'Bearer ' + token,
             }
@@ -114,7 +119,7 @@ const ShoppingPage = () => {
                     {
                         productFlowers.map(flower => (
                             <div className="l-4" key={flower.id}>
-                                <button onClick={() => handleGoDetail(flower.name)} className="product_image-button">
+                                <button onClick={() => handleGoDetail(flower.id)} className="product_image-button">
                                     <img className="product_picture" src={flower.image_url} alt="" />
                                 </button>
                                 <div className="product_name_price">

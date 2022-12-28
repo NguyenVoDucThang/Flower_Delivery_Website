@@ -38,7 +38,7 @@ const Cart = () => {
     const [carts, setCarts] = useState([])
     var token = localStorage.getItem('api');
     const fetchData = () => {
-        fetch("http://localhost:8080/api/admin/carts?cartStatus=InCart", {
+        fetch("http://localhost:8080/api/admin/carts?status=InCart", {
             headers: {
                 'Authorization': 'Bearer ' + token,
             }

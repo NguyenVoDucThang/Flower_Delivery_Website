@@ -7,6 +7,7 @@ import Footer from '../general/Footer'
 import Validator from '../general/Validator'
 import fontawesome from '../assets/font/fontawesome-free-6.2.0-web/css/all.min.css'
 export default function Login(props) {
+    window.scrollTo(0, 0)
     const userApi = 'http://localhost:8080/api/authenticate';
     const navigate = useNavigate();
     setTimeout(() => {

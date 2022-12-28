@@ -25,38 +25,89 @@ const GiftboxShoppingPage = () => {
             }
         });
     }
+    const [cartItem, setCartItem] = useState([])
     function addToCart(arg) {
-        fetch('http://localhost:8080/api/admin/carts', {
-            method: 'POST',
-            headers: {
-                'Authorization': 'Bearer ' + token,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                status: "InCart",
-                receiver: null,
-                delivery: null,
-                products: [
-                    {
-                        'id': arg,
-                        'quantity': 1
-                    }
-                ]
-            })
-        })
-            .then(response => {
-                if (response.ok) {
-                    return;
+        if (state.username) {
+
+            fetch('http://localhost:8080/api/admin/carts?status=InCart', {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                    'Content-Type': 'application/json'
                 }
-                throw new Error('Failed to add item to cart');
             })
-            .catch(error => {
-            });
+                .then(response => {
+                    return response.json()
+                })
+                .then(data => {
+                    setCartItem(data)
+                });
+            if (cartItem.length>0) {
+                fetch('http://localhost:8080/api/admin/carts', {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': 'Bearer ' + token,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        id: cartItem[0].id,
+                        status: "InCart",
+                        receiver: null,
+                        delivery: null,
+                        products: [
+                            {
+                                'id': arg,
+                                'quantity': 1
+                            }
+                        ]
+                    })
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            return;
+                        }
+                        throw new Error('Failed to add item to cart');
+                    })
+                    .catch(error => {
+                    });
+            }
+            else {
+                fetch('http://localhost:8080/api/admin/carts', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + token,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        "status": "InCart",
+                        "products": [
+                            {
+                                "id": arg.id,
+                                "quantity": 1
+                            }
+                        ]
+                    })
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            return;
+                        }
+                        throw new Error('Failed to add item to cart');
+                    })
+                    .catch(error => {
+                    });
+            }
+            }
+
+        else {
+            navigate('/login');
+        }
+
     }
-    
+
     const [productGiftBoxes, setProductGiftBoxes] = useState([])
     const fetchData = () => {
-        fetch("http://localhost:8080/api/admin/products?type=GiftBox", {
+        fetch("http://localhost:8080/api/products?type=GiftBox", {
             headers: {
                 'Authorization': 'Bearer ' + token,
             }
@@ -75,7 +126,7 @@ const GiftboxShoppingPage = () => {
     return (
         <Fragment>
             <Header userdata={username} />
-            <Tab index={2}/>
+            <Tab index={2} />
             <div className="grid wide how_to_use">
                 <hr />
                 <h2 className="how_to_use_title">HOW TO USE OUR PLATFORM?</h2>
@@ -113,23 +164,23 @@ const GiftboxShoppingPage = () => {
                 <h2 className="how_to_use_title">GET THE BEST FROM US</h2>
                 <div className="row product_container">
                     {
-                        productGiftBoxes.map(giftbox =>(
+                        productGiftBoxes.map(giftbox => (
                             <div className="l-4" key={giftbox.id}>
-                            <button onClick={()=>handleGoDetail(giftbox.name)} className="product_image-button">
-                            <img className="product_picture" src={giftbox.image_url} alt="" />
-                            </button>
-                            <div className="product_name_price">
-                                <p className="product_name">{giftbox.name}</p>
-                                <p className="product_price">{giftbox.price} $</p>
+                                <button onClick={() => handleGoDetail(giftbox.id)} className="product_image-button">
+                                    <img className="product_picture" src={giftbox.image_url} alt="" />
+                                </button>
+                                <div className="product_name_price">
+                                    <p className="product_name">{giftbox.name}</p>
+                                    <p className="product_price">{giftbox.price} $</p>
+                                </div>
+                                <hr className="product_hr" />
+                                <div className="product_feater_ship">
+                                    <p className="product_feature">{giftbox.feature}</p>
+                                    <p className="product_ship">FREE SHIPPING</p>
+                                </div>
+                                <p className="product_des">{giftbox.detail}</p>
+                                <button onClick={() => addToCart(giftbox.id)} className="btn_add-to-cart">Add to cart</button>
                             </div>
-                            <hr className="product_hr" />
-                            <div className="product_feater_ship">
-                                <p className="product_feature">{giftbox.feature}</p>
-                                <p className="product_ship">FREE SHIPPING</p>
-                            </div>
-                            <p className="product_des">{giftbox.detail}</p>
-                            <button onClick={() =>addToCart(giftbox.id)} className="btn_add-to-cart">Add to cart</button>
-                        </div>
                         ))
                     }
                 </div>

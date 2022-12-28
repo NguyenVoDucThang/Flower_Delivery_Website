@@ -11,7 +11,7 @@ const Detail = () => {
     var { state } = useLocation();
     const [product, setProduct] = useState([])
     var token = localStorage.getItem('api');
-    var productAPI = 'http://localhost:8080/api/admin/products/'+state.productname;
+    var productAPI = 'http://localhost:8080/api/products/'+state.productname;
     const fetchData = () => {
         fetch(productAPI, {
             headers: {

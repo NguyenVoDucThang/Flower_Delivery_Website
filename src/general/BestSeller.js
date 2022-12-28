@@ -15,8 +15,8 @@ const BestSeller = () => {
                         PF26 - Gift From My Heart (Red) - Ribbon Hand Bouquet
                     </div>
                     <div className="best-seller__item-price">
-                        <div className="first-price">$59.99</div>
-                        <div className="real-price">$49.99</div>
+                        <div className="first-price">$19.99</div>
+                        <div className="real-price">$9.99</div>
                     </div>
                     <div className="best-seller__item-btn">
                         <button className="btn_view-detail">Add to cart</button>
@@ -28,8 +28,8 @@ const BestSeller = () => {
                         PF28- Gift From My Heart (Yellow) - Ribbon Hand Bouquet
                     </div>
                     <div className="best-seller__item-price">
-                        <div className="first-price">$59.99</div>
-                        <div className="real-price">$49.99</div>
+                        <div className="first-price">$19.99</div>
+                        <div className="real-price">$8.99</div>
                     </div>
                     <div className="best-seller__item-btn">
                         <button className="btn_view-detail">Add to cart</button>
@@ -42,7 +42,7 @@ const BestSeller = () => {
                     </div>
                     <div className="best-seller__item-price">
                         <div className="first-price"></div>
-                        <div className="real-price">$39.99</div>
+                        <div className="real-price">$12.99</div>
                     </div>
                     <div className="best-seller__item-btn">
                         <button className="btn_view-detail">Add to cart</button>

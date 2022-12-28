@@ -26,37 +26,42 @@ const TeddyShoppingPage = () => {
         });
     }
     function addToCart(arg) {
-        fetch('http://localhost:8080/api/admin/carts', {
-            method: 'POST',
-            headers: {
-                'Authorization': 'Bearer ' + token,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                status: "InCart",
-                receiver: null,
-                delivery: null,
-                products: [
-                    {
-                        'id': arg,
-                        'quantity': 1
+        if (state.username) {
+            fetch('http://localhost:8080/api/admin/carts', {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    status: "InCart",
+                    receiver: null,
+                    delivery: null,
+                    products: [
+                        {
+                            'id': arg,
+                            'quantity': 1
+                        }
+                    ]
+                })
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return;
                     }
-                ]
-            })
-        })
-            .then(response => {
-                if (response.ok) {
-                    return;
-                }
-                throw new Error('Failed to add item to cart');
-            })
-            .catch(error => {
-            });
+                    throw new Error('Failed to add item to cart');
+                })
+                .catch(error => {
+                });
+        }
+        else {
+            navigate('/login');
+        }
     }
     const [productTeddys, setProductTeddys] = useState([])
 
     const fetchData = () => {
-        fetch("http://localhost:8080/api/admin/products?type=Teddy", {
+        fetch("http://localhost:8080/api/products?type=Teddy", {
             headers: {
                 'Authorization': 'Bearer ' + token,
             }
@@ -75,7 +80,7 @@ const TeddyShoppingPage = () => {
     return (
         <Fragment>
             <Header userdata={username} />
-            <Tab index={1}/>
+            <Tab index={1} />
             <div className="grid wide how_to_use">
                 <hr />
                 <h2 className="how_to_use_title">HOW TO USE OUR PLATFORM?</h2>
@@ -113,23 +118,23 @@ const TeddyShoppingPage = () => {
                 <h2 className="how_to_use_title">GET THE BEST FROM US</h2>
                 <div className="row product_container">
                     {
-                        productTeddys.map(teddy =>(
+                        productTeddys.map(teddy => (
                             <div className="l-4" key={teddy.id}>
-                            <button onClick={()=>handleGoDetail(teddy.name)} className="product_image-button">
-                            <img className="product_picture" src={teddy.image_url} alt="" />
-                            </button>
-                            <div className="product_name_price">
-                                <p className="product_name">{teddy.name}</p>
-                                <p className="product_price">{teddy.price} $</p>
+                                <button onClick={() => handleGoDetail(teddy.id)} className="product_image-button">
+                                    <img className="product_picture" src={teddy.image_url} alt="" />
+                                </button>
+                                <div className="product_name_price">
+                                    <p className="product_name">{teddy.name}</p>
+                                    <p className="product_price">{teddy.price} $</p>
+                                </div>
+                                <hr className="product_hr" />
+                                <div className="product_feater_ship">
+                                    <p className="product_feature">{teddy.feature}</p>
+                                    <p className="product_ship">FREE SHIPPING</p>
+                                </div>
+                                <p className="product_des">{teddy.detail}</p>
+                                <button onClick={() => addToCart(teddy.id)} className="btn_add-to-cart">Add to cart</button>
                             </div>
-                            <hr className="product_hr" />
-                            <div className="product_feater_ship">
-                                <p className="product_feature">{teddy.feature}</p>
-                                <p className="product_ship">FREE SHIPPING</p>
-                            </div>
-                            <p className="product_des">{teddy.detail}</p>
-                            <button onClick={()=>addToCart(teddy.id)} className="btn_add-to-cart">Add to cart</button>
-                        </div>
                         ))
                     }
                 </div>

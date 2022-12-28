@@ -17,7 +17,7 @@ const Subcription = () => {
                     <img src={sub_item} className="subscription__item-img"></img>
                     <div className="subscription__item-title">Weeky</div>
                     <div className="subscription__item-des">
-                        <ul>
+                        <ul style={{textAlign:"left"}}>
                             <li>Free delivery</li>
                             <li>Any available in shop</li>
                             <li>Beautiful package</li>
@@ -29,7 +29,7 @@ const Subcription = () => {
                     <img src={monthly} className="subscription__item-img"></img>
                     <div className="subscription__item-title">Monthly</div>
                     <div className="subscription__item-des">
-                    <ul>
+                    <ul style={{textAlign:"left"}}>
                             <li>Free delivery</li>
                             <li>Any available in shop</li>
                             <li>Beautiful package</li>
@@ -41,7 +41,7 @@ const Subcription = () => {
                     <img src={Specified} className="subscription__item-img"></img>
                     <div className="subscription__item-title">Specified day</div>
                     <div className="subscription__item-des">
-                    <ul>
+                    <ul style={{textAlign:"left"}}>
                             <li>Free delivery</li>
                             <li>Any available in shop</li>
                             <li>Beautiful package</li>

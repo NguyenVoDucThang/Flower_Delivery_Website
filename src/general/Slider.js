@@ -43,6 +43,7 @@ const Slider = () => {
     
     return (
             <div className="grid wide">
+                <hr/>
                 <div className="slider__container">
                     <div className="homepage_slider fade">
                         <div className="slider__img1"></div>

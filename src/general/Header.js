@@ -34,49 +34,20 @@ export default function Header(props) {
             }
         });
     }
+    function handleGoDetail(arg) {
+        console.log("1");
+        navigate('/detail', {
+            state: {
+                username: userdata,
+                productname: arg,
+            }
+        });
+        window.location.reload();
+    }
     const [products, setProducts] = useState([])
 
-    const fetchData = async () => {
-        await fetch("http://localhost:8080/api/admin/products?type=Teddy", {
-            headers: {
-                'Authorization': 'Bearer ' + token,
-            }
-        })
-            .then(response => {
-                return response.json()
-            })
-            .then(data => {
-                setProducts(data)
-            })
-    }
-    const fetchData1 = async () => {
-        await fetch("http://localhost:8080/api/admin/products?type=Flower", {
-            headers: {
-                'Authorization': 'Bearer ' + token,
-            }
-        })
-            .then(response => {
-                return response.json()
-            })
-            .then(data => {
-                setProducts(data)
-            })
-    }
-    const fetchData2 = async () => {
-        await fetch("http://localhost:8080/api/admin/products?type=GiftBox", {
-            headers: {
-                'Authorization': 'Bearer ' + token,
-            }
-        })
-            .then(response => {
-                return response.json()
-            })
-            .then(data => {
-                setProducts(data)
-            })
-    }
-    const fetchData3 = async () => {
-        await fetch("http://localhost:8080/api/admin/products?type=Love", {
+    const fetchData = () => {
+        fetch("http://localhost:8080/api/products", {
             headers: {
                 'Authorization': 'Bearer ' + token,
             }
@@ -91,11 +62,7 @@ export default function Header(props) {
 
     useEffect(() => {
         fetchData()
-        fetchData1()
-        fetchData2()
-        fetchData3()
     }, []);
-    console.log(products)
     const [searchTerm, setSearchTerm] = useState('');
     const handleChange = (event) => {
         setSearchTerm(event.target.value);
@@ -120,7 +87,21 @@ export default function Header(props) {
                             <div className="header__main">
                                 <h2 className="header__main-shop-name">Flower Make Your Day</h2>
                                 <div className="header__main-search">
-                                    <input type="text" className="header__main-search-input" placeholder="Search product, code, style..." />
+                                    <input type="text" className="header__main-search-input" value={searchTerm} placeholder="Search product, code, style..." onChange={handleChange} />
+                                    <div className="header__search-history">
+                                        {
+                                            filteredItems.length > 0 && (
+                                                <ul className="header__search-history-list">
+                                                    {filteredItems.map((item) => (
+                                                        <li className="header__search-history-item" key={item.id}>
+                                                            <button onMouseDown={()=>handleGoDetail(item.id)} >{item.name}</button>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            )
+                                        }
+                                    </div>
+                                    {/* <input type="text" className="header__main-search-input" placeholder="Search product, code, style..." /> */}
                                     <button className="header__main-search-btn">
                                         <i className="header__main-search-btn-icon fa-solid fa-magnifying-glass"></i>
                                     </button>
@@ -156,13 +137,13 @@ export default function Header(props) {
                                 <h2 className="header__main-shop-name">Flower Make Your Day</h2>
                                 <div className="header__main-search">
                                     <input type="text" className="header__main-search-input" value={searchTerm} placeholder="Search product, code, style..." onChange={handleChange} />
-                                    <div class="header__search-history">
+                                    <div className="header__search-history">
                                         {
                                             filteredItems.length > 0 && (
-                                                <ul class="header__search-history-list">
+                                                <ul className="header__search-history-list">
                                                     {filteredItems.map((item) => (
-                                                        <li class="header__search-history-item" key={item.id}>
-                                                            <button >{item.name}</button>
+                                                        <li className="header__search-history-item" key={item.id}>
+                                                            <button onMouseDown={()=>handleGoDetail(item.id)} >{item.name}</button>
                                                         </li>
                                                     ))}
                                                 </ul>
