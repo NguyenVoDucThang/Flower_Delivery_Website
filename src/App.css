@@ -548,6 +548,21 @@
   cursor: pointer;
 }
 
+.header__cart-notice {
+  right: 8px;
+  top: 36px;
+  font-weight: 500;
+  position: absolute;
+  padding: 1px 5px;
+  border-radius: 10px;
+  border: 2px solid #000;
+  font-size: 14px;
+  line-height: 12px;
+  background-color:#fff;
+  color: #000;
+
+}
+
 hr {
   border: 0.5px solid #D0D0D0;
 }

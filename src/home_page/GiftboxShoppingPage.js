@@ -25,10 +25,35 @@ const GiftboxShoppingPage = () => {
             }
         });
     }
-    const [cartItem, setCartItem] = useState([])
+    var cartItem = [];
+    var cartID=''
+
+    const fetchData1 = () => {
+        fetch('http://localhost:8080/api/admin/carts?status=InCart', {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + token,
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                return response.json()
+            })
+            .then(data => {
+                // setCartItem(data)
+                cartItem.push(data.id)
+                console.log(data)
+                if(data.length>0){
+                    cartID = data[0].id;
+                }
+                else {
+                    cartItem=[]
+                }
+                console.log(cartItem)
+            });
+    }
     function addToCart(arg) {
         if (state.username) {
-
             fetch('http://localhost:8080/api/admin/carts?status=InCart', {
                 method: 'GET',
                 headers: {
@@ -36,69 +61,67 @@ const GiftboxShoppingPage = () => {
                     'Content-Type': 'application/json'
                 }
             })
-                .then(response => {
-                    return response.json()
-                })
-                .then(data => {
-                    setCartItem(data)
-                });
-            if (cartItem.length>0) {
-                fetch('http://localhost:8080/api/admin/carts', {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': 'Bearer ' + token,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        id: cartItem[0].id,
-                        status: "InCart",
-                        receiver: null,
-                        delivery: null,
-                        products: [
-                            {
-                                'id': arg,
-                                'quantity': 1
+            .then(response => response.json())
+            .then(data => {
+                if (data.length>0) {
+                    fetch('http://localhost:8080/api/admin/carts', {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': 'Bearer ' + token,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            id: data[0].id,
+                            status: "InCart",
+                            receiver: null,
+                            delivery: null,
+                            products: [
+                                {
+                                    'id': arg,
+                                    'quantity': 1
+                                }
+                            ]
+                        })
+                    })
+                        .then(response => {
+                            if (response.ok) {
+                                return;
                             }
-                        ]
+                            throw new Error('Failed to add item to cart');
+                        })
+                        .catch(error => {
+                        });
+                }
+                else {
+                    fetch('http://localhost:8080/api/admin/carts', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': 'Bearer ' + token,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            "status": "InCart",
+                            "receiver": null,
+                            "delivery": null,
+                            "products": [
+                                {
+                                    "id": arg,
+                                    "quantity": 1
+                                }
+                            ]
+                        })
                     })
-                })
-                    .then(response => {
-                        if (response.ok) {
-                            return;
-                        }
-                        throw new Error('Failed to add item to cart');
-                    })
-                    .catch(error => {
-                    });
-            }
-            else {
-                fetch('http://localhost:8080/api/admin/carts', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': 'Bearer ' + token,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        "status": "InCart",
-                        "products": [
-                            {
-                                "id": arg.id,
-                                "quantity": 1
+                        .then(response => {
+                            if (response.ok) {
+                                return;
                             }
-                        ]
-                    })
-                })
-                    .then(response => {
-                        if (response.ok) {
-                            return;
-                        }
-                        throw new Error('Failed to add item to cart');
-                    })
-                    .catch(error => {
-                    });
-            }
-            }
-
+                            throw new Error('Failed to add item to cart');
+                        })
+                        .catch(error => {
+                        });
+                }
+            })
+        }
         else {
             navigate('/login');
         }

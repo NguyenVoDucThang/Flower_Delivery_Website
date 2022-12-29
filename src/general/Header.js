@@ -4,7 +4,6 @@ import { Fragment } from 'react'
 import Logo from '../assets/images/logo.png'
 import fontawesome from '../assets/font/themify-icons/themify-icons.css'
 import { useEffect, useState } from "react"
-var token = localStorage.getItem('api');
 export default function Header(props) {
     const navigate = useNavigate();
     var userdata = props.userdata
@@ -15,6 +14,7 @@ export default function Header(props) {
             }
         });
     }
+    const [cartItem, setcartItem] = useState(0);
     function handleCart() {
         navigate('/cart', {
             state: {
@@ -35,7 +35,6 @@ export default function Header(props) {
         });
     }
     function handleGoDetail(arg) {
-        console.log("1");
         navigate('/detail', {
             state: {
                 username: userdata,
@@ -63,12 +62,34 @@ export default function Header(props) {
     useEffect(() => {
         fetchData()
     }, []);
+    var token = localStorage.getItem('api');
+    const fetchData1 = () => {
+        if (userdata) {
+            fetch("http://localhost:8080/api/admin/carts?status=InCart", {
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }
+            })
+                .then(response => {
+                    return response.json()
+                })
+                .then(data => {
+                    if (data.length > 0){
+                        setcartItem(data[0].products.length)
+                    }
+                })
+        }
+        return;
+    }
+    useEffect(() => {
+        fetchData1()
+    }, [])
     const [searchTerm, setSearchTerm] = useState('');
     const handleChange = (event) => {
         setSearchTerm(event.target.value);
     };
     const filteredItems = products.filter((item) => {
-        if (searchTerm != '') {
+        if (searchTerm !== '') {
             return item.name.toLowerCase().includes(searchTerm.toLowerCase());
         }
     });
@@ -94,7 +115,7 @@ export default function Header(props) {
                                                 <ul className="header__search-history-list">
                                                     {filteredItems.map((item) => (
                                                         <li className="header__search-history-item" key={item.id}>
-                                                            <button onMouseDown={()=>handleGoDetail(item.id)} >{item.name}</button>
+                                                            <button onMouseDown={() => handleGoDetail(item.id)} >{item.name}</button>
                                                         </li>
                                                     ))}
                                                 </ul>
@@ -124,6 +145,7 @@ export default function Header(props) {
     }
     else {
         return (
+
             <Fragment>
                 <header className="homepage_header">
                     <div className="grid wide homepage_header">
@@ -143,7 +165,7 @@ export default function Header(props) {
                                                 <ul className="header__search-history-list">
                                                     {filteredItems.map((item) => (
                                                         <li className="header__search-history-item" key={item.id}>
-                                                            <button onMouseDown={()=>handleGoDetail(item.id)} >{item.name}</button>
+                                                            <button onMouseDown={() => handleGoDetail(item.id)} >{item.name}</button>
                                                         </li>
                                                     ))}
                                                 </ul>
@@ -170,8 +192,10 @@ export default function Header(props) {
                                     </li>
                                 </ul>
                             </div>
-                            <button className="header__cart header__logo-button" onClick={handleCart}>
+                            <button className="header__cart header__logo-button" style={{ position: 'relative' }} onClick={handleCart}>
                                 <i className="header__cart-icon ti-shopping-cart"></i>
+                                <span className="header__cart-notice">{cartItem}</span>
+
                             </button>
                         </div>
                         <hr />

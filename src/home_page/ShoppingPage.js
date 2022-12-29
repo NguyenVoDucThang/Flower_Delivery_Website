@@ -26,33 +26,75 @@ const ShoppingPage = () => {
         });
     }
     function addToCart(arg) {
+        window.location.reload(false);
         if (state.username) {
-            fetch('http://localhost:8080/api/admin/carts', {
-                method: 'POST',
+            fetch('http://localhost:8080/api/admin/carts?status=InCart', {
+                method: 'GET',
                 headers: {
                     'Authorization': 'Bearer ' + token,
                     'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    status: "InCart",
-                    receiver: null,
-                    delivery: null,
-                    products: [
-                        {
-                            'id': arg,
-                            'quantity': 1
-                        }
-                    ]
-                })
+                }
             })
-                .then(response => {
-                    if (response.ok) {
-                        return;
-                    }
-                    throw new Error('Failed to add item to cart');
-                })
-                .catch(error => {
-                });
+            .then(response => response.json())
+            .then(data => {
+                if (data.length>0) {
+                    fetch('http://localhost:8080/api/admin/carts', {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': 'Bearer ' + token,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            id: data[0].id,
+                            status: "InCart",
+                            receiver: null,
+                            delivery: null,
+                            products: [
+                                {
+                                    'id': arg,
+                                    'quantity': 1
+                                }
+                            ]
+                        })
+                    })
+                        .then(response => {
+                            if (response.ok) {
+                                return;
+                            }
+                            throw new Error('Failed to add item to cart');
+                        })
+                        .catch(error => {
+                        });
+                }
+                else {
+                    fetch('http://localhost:8080/api/admin/carts', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': 'Bearer ' + token,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            "status": "InCart",
+                            "receiver": null,
+                            "delivery": null,
+                            "products": [
+                                {
+                                    "id": arg,
+                                    "quantity": 1
+                                }
+                            ]
+                        })
+                    })
+                        .then(response => {
+                            if (response.ok) {
+                                return;
+                            }
+                            throw new Error('Failed to add item to cart');
+                        })
+                        .catch(error => {
+                        });
+                }
+            })
         }
         else {
             navigate('/login');
